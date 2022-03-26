@@ -1,4 +1,5 @@
 import {v1} from "uuid";
+import {rerenderEntireTree} from "../render";
 
 export type postsType = {
     id: string
@@ -13,24 +14,30 @@ export type MessagesType = {
     id: string
     message: string
 }
+export type dialogsPageType = {
+    dialogs: DialogType[]
+    messages: MessagesType[]
+}
+export type profilePageType = {
+    newPostText: string
+    posts: postsType[]
+}
 export type stateType = {
-    profilePage: {
-        posts: postsType[]
-    }
-    dialogsPage: {
-        dialogs: DialogType[]
-        messages: MessagesType[]
-    }
+    profilePage: profilePageType
+    dialogsPage: dialogsPageType
+
 }
 
 let state: stateType = {
     profilePage: {
+        newPostText: '',
         posts: [
             {id: v1(), message: 'hi, how are you?', likesCount: 20},
             {id: v1(), message: 'It`s my first post', likesCount: 15},
             {id: v1(), message: 'How could happen?', likesCount: 0},
             {id: v1(), message: 'You`re the best', likesCount: 30},
-        ] as postsType[],
+        ]
+
     },
     dialogsPage: {
         dialogs: [
@@ -39,13 +46,30 @@ let state: stateType = {
             {id: v1(), name: 'Sveta'},
             {id: v1(), name: 'Sasha'},
             {id: v1(), name: 'Valera'},
-        ] as DialogType[],
+        ],
         messages: [
             {id: v1(), message: 'Hi'},
             {id: v1(), message: 'How are you Vasya?'},
             {id: v1(), message: 'Yo'},
-        ] as MessagesType[],
+        ],
     },
+}
+
+export const addPost = () => {
+
+    let newPost: postsType = {
+        id: v1(),
+        message: state.profilePage.newPostText,
+        likesCount: 0
+    }
+    state.profilePage.posts.push(newPost)
+    state.profilePage.newPostText = ''//nullyfy area after adding post
+    rerenderEntireTree(state)
+}
+
+export const updateNewPostText = (newText: string) => {//function render state at every change textarea
+    state.profilePage.newPostText = newText
+    rerenderEntireTree(state)
 }
 
 export default state
