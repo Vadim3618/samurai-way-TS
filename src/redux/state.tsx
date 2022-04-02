@@ -1,5 +1,8 @@
 import {v1} from "uuid";
-import {rerenderEntireTree} from "../render";
+
+let rerenderEntireTree = (state: stateType) => {
+    console.log(state)
+}
 
 export type postsType = {
     id: string
@@ -70,6 +73,10 @@ export const addPost = () => {
 export const updateNewPostText = (newText: string) => {//function render state at every change textarea
     state.profilePage.newPostText = newText
     rerenderEntireTree(state)
+}
+
+export const subscribe = (observer: (state:stateType) => void) => {
+    rerenderEntireTree = observer
 }
 
 export default state
